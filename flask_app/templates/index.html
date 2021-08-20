@@ -53,18 +53,6 @@
   <li class="nav-item" role="presentation">
     <a
       class="nav-link"
-      id="ex2-tab-2"
-      data-mdb-toggle="tab"
-      href="#ex2-tabs-2"
-      role="tab"
-      aria-controls="ex2-tabs-2"
-      aria-selected="false"
-      >Reserva de veículos</a
-    >
-  </li>
-  <li class="nav-item" role="presentation">
-    <a
-      class="nav-link"
       id="ex3-tab-3"
       data-mdb-toggle="tab"
       href="#ex3-tabs-3"
@@ -119,14 +107,6 @@
 
   <div
     class="tab-pane fade"
-    id="ex2-tabs-2"
-    role="tabpanel"
-    aria-labelledby="ex2-tab-2"
-  >
-  </div>
-
-  <div
-    class="tab-pane fade"
     id="ex3-tabs-3"
     role="tabpanel"
     aria-labelledby="ex3-tab-3"
@@ -167,42 +147,66 @@
     return (
       <div className="card mb-3">
         <div>
-            <div className="col-12 col-lg-12 col-xl-10 px-lg-5 mb-1">
+            <div className="p-2 mb-2 rounded-3">
                 <div className="card-body">
                     <div className="row align-items-center">
                         <div className="col-auto">
                             <h4>Placa: {car.placa}</h4>
                         </div>
                     </div>
-                    <div className="row align-items-center">
-                        <div className="col-auto">
-                            <span>Ano: {car.ano} </span>
+                    <div className="row jus-items-center">
+                      <div className="col-auto">
+                        <div className="row align-items-center">
+                            <div className="col-auto">
+                                <span>Ano: {car.ano} </span>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row align-items-center">
-                        <div className="col-auto">
-                            Modelo: {car.modelo}
+                        <div className="row align-items-center">
+                            <div className="col-auto">
+                                Modelo: {car.modelo}
+                            </div>
+                        </div>                    
+                        <div className="row mb-2 align-items-center">
+                            <div className="col-auto">
+                                Estado: {car.estado}
+                            </div>
+                        </div>    
+                        <div className="row mb-2 align-items-center">
+                            <div className="col-auto">
+                                {car.alugado}
+                            </div>
                         </div>
-                    </div>                    
-                    <div className="row align-items-center">
-                        <div className="col-auto">
-                            Estado: {car.estado}
+                        <div id={`inicio${car.id}`} className="row align-items-center">
+                            <div className="col-auto">
+                                {`Início: ${car.inicio_aluguel}`}
+                            </div>
                         </div>
-                    </div>    
-                    <div className="row align-items-center">
-                        <div className="col-auto">
-                            {car.alugado}
+                        <div id={`termino${car.id}`} className="row align-items-center">
+                            <div className="col-auto">
+                                {`Término: ${car.termino_aluguel}`}
+                            </div>
                         </div>
-                    </div>
-                    <div id={`inicio${car.id}`} className="row align-items-center">
-                        <div className="col-auto">
-                            {`Início: ${car.inicio_aluguel}`}
+                        <div id={`cancelar${car.id}`} className="my-2 col-auto">
+                          <div className="ustify-content-center row align-items-center">
+                            <button  id={`btncancelar${car.id}`} className="w-100 mt-2 btn btn-primary" type="submit">Cancelar</button>
+                          </div>
                         </div>
-                    </div>
-                    <div id={`termino${car.id}`} className="row align-items-center">
-                        <div className="col-auto">
-                            {`Término: ${car.termino_aluguel}`}
+                      </div>
+                      <div className="col-3">
+                      </div>
+                      <div id={`reservar${car.id}`} className="col-auto">                
+                        <div className="row align-items-center">
+                          <label>Início da reserva: </label>
+                          <input type="date" id={`inicioreserva${car.id}`} className="mb-2"/>
                         </div>
+                        <div className="row align-items-center">
+                          <label>Término da reserva: </label>
+                          <input type="date" id={`terminoreserva${car.id}`} className="mb-2"/>
+                        </div>
+                        <div className="d-flex justify-content-center row align-items-center">
+                          <button  id={`btnreserva${car.id}`} className="w-50 mt-2 btn btn-primary" type="submit">Reservar</button>
+                        </div>
+                      </div>           
                     </div>
                   </div>
               </div>

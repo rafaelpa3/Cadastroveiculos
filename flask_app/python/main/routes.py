@@ -65,3 +65,33 @@ def cars_get():
 			c['inicio_aluguel'] = "-"		
 		list_of_cars.append(c)
 	return(jsonify(status="Success", msg="Lista de carros registrados", cars=list_of_cars))
+
+@main.route('/reservar', methods=['POST'])
+def reservar():
+	'''
+	Adicionar reserva veículos no banco de dados
+	'''
+	data = request.get_json()
+	car = db.session.query(Cars).filter_by(id=data['id']).first()
+	car.alugado = True
+	car.termino_aluguel = datetime.strptime(data['termino'], '%Y-%m-%d')
+	car.inicio_aluguel = datetime.strptime(data['inicio'], '%Y-%m-%d')
+	db.session.commit()
+
+	print(data['termino'], data['inicio'])
+	
+	return(jsonify(status="Success", msg="Reserva salva", cars=data))
+
+@main.route('/cancelar-reserva', methods=['POST'])
+def cancelar_reserva():
+	'''
+	Cancelar reserva veículos no banco de dados
+	'''
+	data = request.get_json()
+	car = db.session.query(Cars).filter_by(id=data['id']).first()
+	print(car.serialize)
+	car.alugado = False
+	db.session.commit()
+	
+	return(jsonify(status="Success", msg="Reserva cancelada", cars=data))
+

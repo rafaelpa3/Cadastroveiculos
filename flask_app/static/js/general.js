@@ -57,6 +57,15 @@ document.onreadystatechange = function () {
         // VEICULOS CADASTRADOS ELEMENTS
         var tabVeiculosCadastrados = document.getElementById("ex3-tab-3")
         var dropdownFiltros = document.getElementById("filtros");
+        var all_cars;
+        var inicio=[];
+        var termino=[]
+        var reservar=[]
+        var cancelar=[]
+        var inicioInput=[]
+        var terminoInput=[]
+        var btnReserva=[]
+        var btnCancela=[]
 
         tabVeiculosCadastrados.addEventListener('click', showCars)
         dropdownFiltros.addEventListener('change', showCars)
@@ -69,16 +78,16 @@ document.onreadystatechange = function () {
                         //data: JSON.stringify({'art_name': modalTextNovaArte.value}),
                         contentType: 'application/json',
                         success: function (data) {
+                            all_cars = data.cars
                             renderCars(data)
                         },
                         async: false
-                    }); 
+            }); 
         }
 
         function renderCars(data){
             var filter = dropdownFiltros.value;
             const cars = []
-            console.log(filter)
             for (var i = 0; i < data.cars.length; i++) {
                 if (filter=="Alugado"){
                     if (data.cars[i].alugado == "Veículo reservado"){
@@ -90,29 +99,106 @@ document.onreadystatechange = function () {
                     }
                 }else if(filter=="Manutencao"){
                     if (data.cars[i].estado != "Liberado"){
-                        console.log("to no manutencao")
                         cars.push(data.cars[i])
                     }
                 }else{
-                    console.log("to no else")
                     cars.push(data.cars[i])
                 }
             }
             
             renderRows(cars)
-            var terminos = document.getElementsByClassName("terminos")
+
+            inicio=[];
+            termino=[]
+            reservar=[]
+            cancelar=[]
+            inicioInput=[]
+            terminoInput=[]
+            btnReserva=[]
+            btnCancela=[]
+
             for (var i = 0; i < cars.length; i++) {
-                var inicio = document.getElementById(`inicio${cars[i].id}`)
-                var termino = document.getElementById(`termino${cars[i].id}`)
+                inicio.push(document.getElementById(`inicio${cars[i].id}`))
+                termino.push(document.getElementById(`termino${cars[i].id}`))
+                reservar.push(document.getElementById(`reservar${cars[i].id}`))
+                cancelar.push(document.getElementById(`cancelar${cars[i].id}`))
+                
+                inicioInput.push(document.getElementById(`inicioreserva${cars[i].id}`))
+                terminoInput.push(document.getElementById(`terminoreserva${cars[i].id}`))
+                inicioInput[i].valueAsDate = new Date();
+                terminoInput[i].valueAsDate = new Date();
+
+                btnReserva.push(document.getElementById(`btnreserva${cars[i].id}`))
+                btnCancela.push(document.getElementById(`btncancelar${cars[i].id}`))
+
+                btnCancela[i].addEventListener('click', cancelar_reserva)
+                btnReserva[i].addEventListener('click', salvar_reserva)
+
                 if (cars[i].inicio_aluguel == "-" || cars[i].termino_aluguel == "-"){
-                    inicio.style.display = 'none'
-                    termino.style.display = 'none'
+                    inicio[i].style.display = 'none'
+                    termino[i].style.display = 'none'
+                    reservar[i].style.display = 'block'
+                    cancelar[i].style.display = 'none'
                 }else{
-                    inicio.style.display = 'block'
-                    termino.style.display = 'block'
+                    inicio[i].style.display = 'block'
+                    termino[i].style.display = 'block'
+                    reservar[i].style.display = 'none'
+                    cancelar[i].style.display = 'block'
                 }
             }
             
+        }
+
+        function cancelar_reserva(){
+            var index = parseInt(this.id.slice(this.id.length - 1))
+            $.ajax({
+                type: 'POST',
+                url: '/cancelar-reserva',
+                dataType: 'json',
+                data: JSON.stringify({
+                    "id": index,
+                }),
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.status=="Error"){
+                        window.alert(
+                            `Erro!\n\n${data.msg}`
+                        )
+                    }else{
+                        window.alert(
+                            `Sucesso!\n\n${data.msg}`
+                        )
+                        showCars()
+                    }
+                }
+            })
+        }
+
+        function salvar_reserva(){
+            var index = parseInt(this.id.slice(this.id.length - 1))
+            $.ajax({
+                type: 'POST',
+                url: '/reservar',
+                dataType: 'json',
+                data: JSON.stringify({
+                    "id": index,
+                    "inicio": inicioInput[index-1].value,
+                    "termino": terminoInput[index-1].value
+                }),
+                contentType: 'application/json',
+                success: function (data) {
+                    if (data.status=="Error"){
+                        window.alert(
+                            `Erro!\n\n${data.msg}`
+                        )
+                    }else{
+                        window.alert(
+                            `Sucesso!\n\n${data.msg}`
+                        )
+                        showCars()
+                    }
+                }
+            })
         }
 
     }
