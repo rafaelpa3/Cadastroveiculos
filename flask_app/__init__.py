@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
 ####### RESTART DB? #######
-RESTART_DB = False
+RESTART_DB = True
 ###########################
 
 db = SQLAlchemy()
@@ -29,19 +29,30 @@ def create_app(config_class):
             db.create_all()
             ## DEFAULT PRA TEST ##
             car1 = Cars(
-        		modelo = "HB20",
-        		placa = "AAA1A11",
-        		ano = 2019,
-            	estado = True,
- 			)
+              modelo = "HB20",
+              placa = "AAA1A11",
+              ano = 2019,
+              estado = True,
+              alugado = False
+ 			      )
             car2 = Cars(
-        		modelo = "Palio",
-        		placa = "BBB2B22",
-        		ano = 2012,
+              modelo = "Palio",
+              placa = "BBB2B22",
+              ano = 2012,
             	estado = False,
- 			)
+              alugado = False,
+ 			      )
+            car3 = Cars(
+              modelo = "Uno",
+              placa = "CCC3C33",
+              ano = 2016,
+            	estado = True,
+              alugado = True,
+ 			      )
+
             db.session.add(car1)
             db.session.add(car2)
+            db.session.add(car3)
             db.session.commit()
             print("Banco de dados restaurado. \n")
 

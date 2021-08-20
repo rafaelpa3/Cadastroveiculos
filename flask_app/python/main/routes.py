@@ -36,6 +36,7 @@ def car_register():
 				placa = data['placa'],
 				ano = data['ano'],
 				estado = data['estado'],
+				alugado = False,
 			)
 			db.session.add(car)
 			db.session.commit()
@@ -49,6 +50,18 @@ def cars_get():
 	cars = Cars.query.all()
 	list_of_cars = []
 	for car in cars:
-		print(car.serialize)
-		list_of_cars.append(car.serialize)
+		c = car.serialize
+		if c['estado'] == True:
+			c['estado'] = "Liberado"
+		else:
+			c['estado'] = "Manutenção"
+		if c['alugado'] == True:
+			c['alugado'] = "Veículo reservado"
+			c['termino_aluguel'] = c['termino_aluguel'].strftime("%d/%m/%Y")
+			c['inicio_aluguel'] = c['inicio_aluguel'].strftime("%d/%m/%Y")
+		else:
+			c['alugado'] = "Veículo sem reserva"		
+			c['termino_aluguel'] = "-"		
+			c['inicio_aluguel'] = "-"		
+		list_of_cars.append(c)
 	return(jsonify(status="Success", msg="Lista de carros registrados", cars=list_of_cars))
